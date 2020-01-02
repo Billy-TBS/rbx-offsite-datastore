@@ -1,0 +1,23 @@
+{
+    "name": "rbx-offsite-datastore",
+    "version": "1.0.0",
+    "description": "A service that allows you to store your roblox data offsite.",
+    "main": "datastore.js",
+    "scripts": {
+        "start": "node datastore.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BillyBD/rbx-offsite-datastore"
+    },
+    "author": "Billy_BD <https://roblox.com/users/118962450/profile>",
+    "license": "MIT",
+    "dependencies": {
+        "express": "4.17.1",
+        "body-parser": "1.19.0",
+        "fs-extra": "8.1.0"
+    },
+    "bugs": {
+        "url": "https://github.com/BillyBD/rbx-offsite-datastore/issues"
+    }
+}
