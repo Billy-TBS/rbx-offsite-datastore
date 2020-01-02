@@ -13,8 +13,8 @@ let config = require('./config.json');
 let app = express();
 let port = process.env.port || 3030;
 app.set('env', 'production');
-app.use(Authorize)
 app.use(bodyparser.json())
+app.use(Authorize)
 
 // Main
 
