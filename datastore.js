@@ -24,35 +24,43 @@ app.use(mod.Authorize);
 
 app.get('/', (req, res) => res.status(200).send("Server is online!"));
 
-app.get('/GetData', Authorize(req, res, function(req, res){
+app.post('/GetData', function(req,res,next){
     let uid = req.body.uid;
     let dataname = req.body.dataname;
-    if (`./${uid}` !== null){
-        if (`./${uid}/${dataname}` !== null){
-            fs.readFile(`./${uid}/${dataname}`, 'utf-8', (err, data) => {
-                if (err) throw err;
-                if (err) res.status(500).send("There was an error getting data!");
-                res.status(200).send(data);
+    let exists1 = fs.pathExistsSync(`./${uid}`)
+    let exists2 = fs.pathExistsSync(`./${uid}/${dataname}`)
+    if (exists1 == true){
+        if (exists2 == true){
+            fs.readFile(`./${uid}/${dataname}`, 'utf-8', (err,data) => {
+                if (err) res.status(500).send('Error retriving data!')
+                if (err) throw err
+                res.status(200).send(data)
             });
         } else {
-            res.status(500).send("Data is not found!");
+            res.status(500).send('Unable to find data!')
         };
     } else {
-        res.status(500).send("User is not on the server, creating directory...");
-        fs.mkdir(`${uid}`)
-    };
+        res.status(500).send('Unable to find user in database! Creating new folder...')
+        fs.mkdir(`./${uid}`)
+    }
+    
 
-}));
+});
 
-app.post('/SetData', Authorize(req, res, function(req, res){
+app.post('/SetData', function(req,res,next){
     let uid = req.body.uid;
     let dataname = req.body.dataname;
     let data = req.body.data;
-    if (`./${uid}/${dataname}` !== null){
+    let exists = fs.pathExistsSync(`./${uid}/${dataname}`)
+    if (exists == true){
         fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
         res.status(200).send("Data has been added!");
     } else {
         fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
         res.status(200).send("Data has been added!");
     };
-}));
+});
+
+app.listen(port, function(){
+    console.log(`Listening on port ${port}`);
+});
