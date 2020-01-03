@@ -3,18 +3,18 @@ let express = require('express');
 let bodyparser = require('body-parser');
 let fs = require('fs-extra')
 
-// Configuration File
+// Configuration
 
 let config = require('./config.json');
-
 
 // Setup Express
 
 let app = express();
 let port = process.env.port || 3030;
 app.set('env', 'production');
-app.use(bodyparser.json())
-app.use(Authorize)
+app.use(bodyparser.json());
+app.use(Authorize);
+
 
 // Main
 
@@ -32,7 +32,7 @@ app.post('/GetData', function(req,res,next){
             });
         } else {
             res.status(500).send(`Unable to find data for ${uid}!`)
-            console.log(`Unable to find dad for ${uid}!`)
+            console.log(`Unable to find data for ${uid}!`)
         };
     } else {
         res.status(500).send('Unable to find user in database! Creating new folder...')
@@ -47,26 +47,36 @@ app.post('/SetData', function(req,res,next){
     let uid = req.body.uid;
     let dataname = req.body.dataname;
     let data = req.body.data;
-    let exists = fs.pathExistsSync(`./${uid}/${dataname}`)
+    let exists2 = fs.pathExistsSync(`./${uid}/${dataname}`)
+    let exists = fs.pathExistsSync(`./${uid}`)
     if (exists == true){
-        let lengh = data.lengh()
-        if (lengh < config.max_amount_of_data){
-            fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
-            res.status(200).send("Data has been added!");
+        if (exists2 == true){
+            let lengh = data.lengh()
+            if (lengh < config.max_amount_of_data){
+                fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
+                res.status(200).send("Data has been added!");
+            } else {
+                res.status(500).send('The data provided is too long!');
+            };    
         } else {
-            res.status(500).send('The data provided is too long!')
-        };    
+            let lengh = data.lengh()
+            if (lengh < config.max_amount_of_data){
+                fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
+                res.status(200).send(`Data has been added for ${uid}!`);
+                console.log(`Data has been added for ${uid}!`)
+            } else {
+                res.status(500).send('The data provided is too long!');
+                console.log(`The data provided is too long!`)
+            };
+        };
     } else {
-        let lengh = data.lengh()
-        if (lengh < config.max_amount_of_data){
-            fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
-            res.status(200).send(`Data has been added for ${uid}!`);
-            console.log(`Data has been added for ${uid}!`)
-        } else {
-            res.status(500).send('The data provided is too long!');
-            console.log(`The data provided is too long!`)
-        }
-    };
+        res.status(500).send(`User ${uid} is not found! Adding user to database!`);
+        console.log(`Folder for ${uid} doesn't exist. Creating new folder...`);
+        fs.mkdir(`./${uid}`);
+        fs.writeFile(`./${uid}/${dataname}`, data, 'utf-8');
+        res.status(200).send(`Data saved for ${uid}!`);
+        console.log(`Data Saved for ${uid}!`);
+    };  
 });
 
 function Authorize(req, res, next_function){
@@ -75,7 +85,7 @@ function Authorize(req, res, next_function){
     } else {
         res.status(500).send('Incorrect Authorization Key!')
     };
-}
+};
 
 app.listen(port, function(){
     console.log(`Listening on port ${port}`);
