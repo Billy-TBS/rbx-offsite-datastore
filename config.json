@@ -1,4 +1,4 @@
 {
     "authorization_key": "",
-    "maximum_amount_of_data":  // A numerical value, the maximum amount of characters your data can be.
+    "maximum_amount_of_data": 99999
 }
