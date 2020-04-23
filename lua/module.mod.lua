@@ -3,7 +3,7 @@
 local mod = {}
 local http = game:GetService('HttpService')
 
-local config = require(script.Parent.Config)
+local config = require(script.Config)
 
 local function Request(TypeOfRequest, RequestInfo)
 	RequestInfo["auth_key"] = config.authorization_key
@@ -28,7 +28,7 @@ end
 
 
 function mod.GetData(userid, typofdata)
-	assert(typeof(userid) == "string", "Error: UserId must be a string!") -- UserId has to be a string due to
+	assert(typeof(userid) == "string", "Error: UserId must be a string!") -- UserId has to be a string because fs checks folders as a string, you could always do this on the server, but you may as well just get it done here.
 	assert(typeof(typofdata) == "string", "Error: Type of Data must be a string!")
 	local Body = {
 			uid = userid,
