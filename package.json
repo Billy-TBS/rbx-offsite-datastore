@@ -13,9 +13,9 @@
     "author": "Billy_TBS <https://roblox.com/users/118962450/profile>",
     "license": "MIT",
     "dependencies": {
-        "express": "4.17.1^",
-        "body-parser": "1.19.0^",
-        "fs-extra": "8.1.0^"
+        "express": ">=4.5",
+        "body-parser": ">=1.19.0",
+        "fs-extra": ">=8.1.0"
     },
     "bugs": {
         "url": "https://github.com/Billy-TBS/rbx-offsite-datastore/issues"
